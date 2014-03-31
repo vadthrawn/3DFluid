@@ -3,10 +3,12 @@ namespace octet
 	class Metaballs : public app
 	{
 		metaball_shader* mb_shader;
-		float* mb_positions;
+		int* mb_positions;
+		float* pixels;
+		int sizeOfPixels;
 		int numOfMetaballs;
 		vec4 mb_color;
-		float mb_threshold;
+		int mb_threshold;
 		GLuint positionBuffer, attribute_position;
 		mat4t modelToWorld, cameraToWorld;
 
@@ -16,6 +18,8 @@ namespace octet
 		~Metaballs ()
 		{
 			delete[] mb_positions;
+			delete[] pixels;
+			delete mb_shader;
 		}
 
 		/// this is called once OpenGL is initialized
@@ -26,19 +30,41 @@ namespace octet
 
 			attribute_position = glGetAttribLocation (mb_shader->program(), "pos");
 
-			mb_threshold = 0.5f;
+			sizeOfPixels = 2000000;
+			pixels = new float[sizeOfPixels];
+			float xIndex = -5.00f;
+
+			for (int i = 0; i < 1000; i++)
+			{
+				float yIndex = -5.00f;
+
+				for (int j = 0; j < 1000; j++)
+				{
+					pixels[(i * 1000 * 2) + (j * 2) + 0] = xIndex;
+					pixels[(i * 1000 * 2) + (j * 2) + 1] = yIndex;
+
+					yIndex += 0.01f;
+				}
+
+				xIndex += 0.01f;
+			}
+
+			glGenBuffers (1, &positionBuffer);
+			glBindBuffer (GL_ARRAY_BUFFER, positionBuffer);
+
+			glBufferData (GL_ARRAY_BUFFER, sizeOfPixels * sizeof (GLfloat), pixels, GL_STATIC_DRAW);
+
+			mb_threshold = 50;
 			mb_color = vec4(1, 1, 1, 1);
 
-			numOfMetaballs = 2;
-
-			mb_positions = new float[numOfMetaballs * 3];
-			
-			mb_positions[0] = 1.5f;
-			mb_positions[1] = 1.0f;
-			mb_positions[2] = 0.0f;
-			mb_positions[3] = 3.0f;
-			mb_positions[4] = 2.0f;
-			mb_positions[5] = 0.0f;
+			numOfMetaballs = 3;
+			mb_positions = new int[numOfMetaballs * 2];
+			mb_positions[0] = 200;
+			mb_positions[1] = 300;
+			mb_positions[2] = 500;
+			mb_positions[3] = 600;
+			mb_positions[4] = 300;
+			mb_positions[5] = 400;
 			
 			modelToWorld.loadIdentity();
 			cameraToWorld.loadIdentity();
@@ -53,29 +79,6 @@ namespace octet
 			get_viewport_size (vx, vy);
 			glViewport (0, 0, vx, vy);
 
-			dynarray<float> points;
-
-			for (float i = -5.00f; i <= 5.00f; i = i + 0.01f)
-			{
-				for (float j = -5.00f; j <= 5.00f; j = j + 0.01f)
-				{
-					float potential = 0.0f;
-
-					for (int m = 0; m < numOfMetaballs; m++)
-					{
-						float magnitude = sqrt (pow (i - mb_positions[(m * 3)], 2) + pow (j - mb_positions[(m * 3) + 1], 2));
-						potential += mb_threshold / magnitude;
-					}
-
-					if (potential > 1.0f)
-					{
-						points.push_back (i);
-						points.push_back (j);
-						points.push_back (0.0f);
-					}
-				}
-			}
-
 			glClearColor (0.0f, 0.0f, 0.0f, 1.0f);
 			glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -83,38 +86,25 @@ namespace octet
 
 			mat4t modelToProjection = mat4t::build_projection_matrix(modelToWorld, cameraToWorld, 0.5f, 256.0f);
 
-			mb_shader->render (modelToProjection, mb_color, mb_positions[0], mb_threshold);
-
-			glGenBuffers (1, &positionBuffer);
-			glBindBuffer (GL_ARRAY_BUFFER, positionBuffer);
-
-			float* metaball_Positions = new float[points.size()];
-
-			for (int i = 0; i < (int)points.size(); i++)
-			{
-				metaball_Positions[i] = points[i];
-			}
-
-			glBufferData (GL_ARRAY_BUFFER, points.size() * sizeof (GLfloat), metaball_Positions, GL_STATIC_DRAW);
+			mb_shader->render (modelToProjection, mb_color, mb_positions, mb_threshold, numOfMetaballs);
 
 			glEnableVertexAttribArray (attribute_position);
-			glVertexAttribPointer (attribute_position, 3, GL_FLOAT, GL_FALSE, 3 * sizeof (GL_FLOAT), 0);
-			glDrawArrays (GL_POINTS, 0, points.size());
-			glDisableVertexAttribArray (attribute_position);
+			glBindBuffer (GL_ARRAY_BUFFER, positionBuffer);
 
-			glDeleteBuffers (1, &positionBuffer);
+			glVertexAttribPointer (attribute_position, 2, GL_FLOAT, GL_FALSE, 2 * sizeof (GLfloat), 0);
+			glDrawArrays (GL_POINTS, 0, sizeOfPixels);
 
 			if (is_key_down ('W'))
-				mb_positions[1] += 0.01f;
+				mb_positions[1] += 1;
 
 			if (is_key_down ('S'))
-				mb_positions[1] -= 0.01f;
+				mb_positions[1] -= 1;
 
 			if (is_key_down ('A'))
-				mb_positions[0] -= 0.01f;
+				mb_positions[0] -= 1;
 
 			if (is_key_down ('D'))
-				mb_positions[0] += 0.01f;
+				mb_positions[0] += 1;
 		}
 	};
 }
