@@ -4,7 +4,7 @@ namespace octet
 	{
 		class metaball_shader : public shader
 		{
-			GLuint modelToProjection_, emissive_color_, position_, threshold_;
+			GLuint modelToProjection_, emissive_color_, position_, threshold_, numOfMetaballs_;
 
 		public:
 			void init ()
@@ -24,19 +24,31 @@ namespace octet
 					);
 
 					const char fragment_shader[] = SHADER_STR(
-						uniform vec4 emissive_color;
-						uniform vec3 position;
-						uniform float threshold;
+						const int maxNumOfMetaballs = 20;
+
+						uniform vec3 emissive_color[maxNumOfMetaballs];
+						uniform int numOfMetaballs;
+						uniform int positions[2 * maxNumOfMetaballs];
+						uniform int threshold;
 
 						void main()
 						{
-							//vec3 currentPixel = gl_FragCoord.xyz;
-							//float magnitude = sqrt (pow (currentPixel.x - position.x, 2.0) + pow (currentPixel.y - position.y, 2.0) + pow (currentPixel.z - position.z, 2.0));
-							
-							//gl_FragColor = vec4(0, 0, 0, 1);
+							float potential = 0.0;
+							vec3 currentColor = vec3 (0, 0, 0);
 
-							//if (magnitude > threshold)
-								gl_FragColor = emissive_color;
+							for (int i = 0; i < numOfMetaballs; i++)
+							{
+								float magnitude = sqrt (pow (gl_FragCoord.x - positions[i * 2], 2.0) + pow (gl_FragCoord.y - positions[i * 2 + 1], 2.0));
+								float currentBallPotential = threshold / magnitude;
+
+								potential += currentBallPotential;
+								currentColor = mix (currentColor, emissive_color[i], currentBallPotential);
+							}
+							
+							gl_FragColor = vec4(0, 0, 0, 1);
+
+							if (potential > 1.0)
+								gl_FragColor = vec4 (currentColor, 1);
 						}
 					);
     
@@ -45,18 +57,20 @@ namespace octet
 				
 				modelToProjection_ = glGetUniformLocation (program(), "modelToProjection");
 				emissive_color_ = glGetUniformLocation (program(), "emissive_color");
-				position_ = glGetUniformLocation (program(), "position");
+				position_ = glGetUniformLocation (program(), "positions");
 				threshold_ = glGetUniformLocation (program(), "threshold");
+				numOfMetaballs_ = glGetUniformLocation (program(), "numOfMetaballs");
 			}
 
-			void render (const mat4t &modelToProjection, const vec4 &emissive_color, const vec3 &position, const float &threshold)
+			void render (const mat4t &modelToProjection, const float* emissive_color, const int* position, const int &threshold, const int &numOfMetaballs)
 			{
 				shader::render();
 
+				glUniform1i (numOfMetaballs_, numOfMetaballs);
 				glUniformMatrix4fv (modelToProjection_, 1, GL_FALSE, modelToProjection.get());
-				glUniform4fv (emissive_color_, 1, emissive_color.get());
-				glUniform4fv (position_, 1, position.get());
-				glUniform1f (threshold_, threshold);
+				glUniform3fv (emissive_color_, numOfMetaballs, emissive_color);
+				glUniform1iv (position_, numOfMetaballs * 2, position);
+				glUniform1i (threshold_, threshold);
 			}
 		};
 	}
