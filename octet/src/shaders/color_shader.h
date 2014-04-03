@@ -4,7 +4,7 @@ namespace octet
 	{
 		class color_shader : public shader
 		{
-			GLuint modelToProjectionIndex_;
+			GLuint modelToProjectionIndex_, emissive_color_;
 
 		public:
 			void init()
@@ -35,13 +35,15 @@ namespace octet
 				#endif
 
 				modelToProjectionIndex_ = glGetUniformLocation(program(), "modelToProjection");
+				emissive_color_ = glGetUniformLocation (program(), "emissive_color");
 			}
 
-			void render(const mat4t &modelToProjection, const vec4 &emissive_color)
+			void render(const mat4t &modelToProjection, const float *emissive_color)
 			{
 				shader::render();
 
 				glUniformMatrix4fv(modelToProjectionIndex_, 1, GL_FALSE, modelToProjection.get());
+				glUniform4fv (emissive_color_, 1, emissive_color);
 			}
 		};
 	}

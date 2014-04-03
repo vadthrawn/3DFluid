@@ -65,7 +65,7 @@ namespace octet {
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), NULL);
 
       // draw a triangle
-      glDrawArrays(GL_TRIANGLES, 0, 3);
+      glDrawArrays(GL_LINES, 0, 3);
     }
   };
 }

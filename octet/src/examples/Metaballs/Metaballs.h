@@ -4,12 +4,9 @@ namespace octet
 	{
 		metaball_shader* mb_shader;
 		int* mb_positions;
-		float* pixels;
-		vec2* velocities;
+		float* velocities;
 		float* colors;
-		int sizeOfPixels;
 		int numOfMetaballs;
-		vec4 mb_color;
 		int mb_threshold;
 		GLuint positionBuffer, attribute_position;
 		mat4t modelToWorld, cameraToWorld;
@@ -20,7 +17,6 @@ namespace octet
 		~Metaballs ()
 		{
 			delete[] mb_positions;
-			delete[] pixels;
 			delete[] velocities;
 			delete[] colors;
 			delete mb_shader;
@@ -32,55 +28,53 @@ namespace octet
 			mb_shader = new metaball_shader;
 			mb_shader->init();
 
+			const float cameraTranslate = 5.0f;
+
 			attribute_position = glGetAttribLocation (mb_shader->program(), "pos");
 
-			sizeOfPixels = 2000000;
-			pixels = new float[sizeOfPixels];
-			float xIndex = -5.00f;
+			float vertices[] = {
+				-cameraTranslate, -cameraTranslate, 0.0f,
+				cameraTranslate, cameraTranslate, 0.0f,
+				cameraTranslate, -cameraTranslate, 0.0f,
 
-			for (int i = 0; i < 1000; i++)
-			{
-				float yIndex = -5.00f;
-
-				for (int j = 0; j < 1000; j++)
-				{
-					pixels[(i * 1000 * 2) + (j * 2) + 0] = xIndex;
-					pixels[(i * 1000 * 2) + (j * 2) + 1] = yIndex;
-
-					yIndex += 0.01f;
-				}
-
-				xIndex += 0.01f;
-			}
+				-cameraTranslate, -cameraTranslate, 0.0f,
+				-cameraTranslate, cameraTranslate, 0.0f,
+				cameraTranslate, cameraTranslate, 0.0f,
+			};
 
 			glGenBuffers (1, &positionBuffer);
 			glBindBuffer (GL_ARRAY_BUFFER, positionBuffer);
 
-			glBufferData (GL_ARRAY_BUFFER, sizeOfPixels * sizeof (GLfloat), pixels, GL_STATIC_DRAW);
+			glBufferData (GL_ARRAY_BUFFER, sizeof (vertices), vertices, GL_STATIC_DRAW);
 
-			mb_threshold = 30;
-			mb_color = vec4(1, 1, 1, 1);
+			mb_threshold = 20;
 
-			numOfMetaballs = 6;
-			mb_positions = new int[numOfMetaballs * 2];
-			velocities = new vec2[numOfMetaballs];
+			numOfMetaballs = 2;
+			mb_positions = new int[numOfMetaballs * 3];
+			velocities = new float[numOfMetaballs * 3];
 			colors = new float[numOfMetaballs * 3];
 
 			mb_positions[0] = 200;
 			mb_positions[1] = 300;
-			velocities[0] = vec2 (2.0f, 3.0f);
-			colors[0] = 1.0f;
-			colors[1] = 0.0f;
-			colors[2] = 0.0f;
+			mb_positions[2] = 0;
+			velocities[0] = -5.0f;
+			velocities[1] = -3.0f;
+			velocities[2] = 0.0f;
+			colors[0] = 0.0f;
+			colors[1] = 0.2f;
+			colors[2] = 0.5f;
 
-
-			mb_positions[2] = 500;
-			mb_positions[3] = 600;
-			velocities[1] = vec2 (-1.0f, 2.5f);
+			mb_positions[3] = 400;
+			mb_positions[4] = 350;
+			mb_positions[5] = 0;
+			velocities[3] = 2.5f;
+			velocities[4] = 4.0f;
+			velocities[5] = 0.0f;
 			colors[3] = 0.0f;
-			colors[4] = 1.0f;
-			colors[5] = 0.0f;
+			colors[4] = 0.2f;
+			colors[5] = 0.5f;
 
+			/*
 			mb_positions[4] = 300;
 			mb_positions[5] = 400;
 			velocities[2] = vec2 (5.0f, -7.5f);
@@ -90,7 +84,7 @@ namespace octet
 
 			mb_positions[6] = 600;
 			mb_positions[7] = 650;
-			velocities[3] = vec2 (-5.0f, 7.5f);
+			velocities[3] = vec2 (5.0f, 7.5f);
 			colors[9] = 1.0f;
 			colors[10] = 1.0f;
 			colors[11] = 0.0f;
@@ -108,10 +102,53 @@ namespace octet
 			colors[15] = 1.0f;
 			colors[16] = 1.0f;
 			colors[17] = 1.0f;
+
+			mb_positions[12] = 175;
+			mb_positions[13] = 100;
+			velocities[6] = vec2 (-2.0f, 3.0f);
+			colors[18] = 1.0f;
+			colors[19] = 0.0f;
+			colors[20] = 0.0f;
+
+			mb_positions[14] = 450;
+			mb_positions[15] = 700;
+			velocities[7] = vec2 (-3.0f, -2.5f);
+			colors[21] = 0.0f;
+			colors[22] = 1.0f;
+			colors[23] = 0.0f;
+
+			mb_positions[16] = 100;
+			mb_positions[17] = 100;
+			velocities[8] = vec2 (5.0f, -7.5f);
+			colors[24] = 0.0f;
+			colors[25] = 0.0f;
+			colors[26] = 1.0f;
+
+			mb_positions[18] = 600;
+			mb_positions[19] = 600;
+			velocities[9] = vec2 (-5.0f, 7.5f);
+			colors[27] = 1.0f;
+			colors[28] = 1.0f;
+			colors[29] = 0.0f;
+
+			mb_positions[20] = 50;
+			mb_positions[21] = 100;
+			velocities[10] = vec2 (2.5f, -6.0f);
+			colors[30] = 0.0f;
+			colors[31] = 1.0f;
+			colors[32] = 1.0f;
+
+			mb_positions[22] = 500;
+			mb_positions[23] = 400;
+			velocities[11] = vec2 (-3.0f, 3.0f);
+			colors[33] = 1.0f;
+			colors[34] = 1.0f;
+			colors[35] = 1.0f;
+			*/
 			
 			modelToWorld.loadIdentity();
 			cameraToWorld.loadIdentity();
-			cameraToWorld.translate(0.0f, 0.0f, 5.0f);
+			cameraToWorld.translate(0.0f, 0.0f, cameraTranslate);
 		}
 
 		/// this is called to draw the world
@@ -134,11 +171,15 @@ namespace octet
 			glEnableVertexAttribArray (attribute_position);
 			glBindBuffer (GL_ARRAY_BUFFER, positionBuffer);
 
-			glVertexAttribPointer (attribute_position, 2, GL_FLOAT, GL_FALSE, 2 * sizeof (GLfloat), 0);
-			glDrawArrays (GL_POINTS, 0, sizeOfPixels);
+			glVertexAttribPointer (attribute_position, 3, GL_FLOAT, GL_FALSE, 3 * sizeof (GLfloat), 0);
+
+			int size;
+			glGetBufferParameteriv (GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+
+			glDrawArrays (GL_TRIANGLES, 0, size / sizeof (GLfloat));
 
 			for (int i = 0; i < numOfMetaballs; i++)
-				AdjustPosition (mb_positions[i * 2], mb_positions[i * 2 + 1], velocities[i]);
+				AdjustPosition (mb_positions[i * 3], mb_positions[i * 3 + 1], mb_positions[i * 3 + 2], velocities[i * 3], velocities[i * 3 + 1], velocities[i * 3 + 2]);
 
 			/*
 			if (is_key_down ('W'))
@@ -155,7 +196,7 @@ namespace octet
 				*/
 		}
 
-		void CheckBoundries (int &positionX, int &positionY, vec2 &velocity)
+		void CheckBoundries (int &positionX, int &positionY, int &positionZ, float &velocityX, float &velocityY, float &velocityZ)
 		{
 			int vx, vy;
 			get_viewport_size (vx, vy);
@@ -163,34 +204,35 @@ namespace octet
 			if (positionX < mb_threshold)
 			{
 				positionX = mb_threshold;
-				velocity.x() = - velocity.x();
+				velocityX = - velocityX;
 			}
 
 			else if (positionX > vx - mb_threshold)
 			{
 				positionX = vx - mb_threshold;
-				velocity.x() = -velocity.x();
+				velocityX = -velocityX;
 			}
 
 			if (positionY < mb_threshold)
 			{
 				positionY = mb_threshold;
-				velocity.y() = -velocity.y();
+				velocityY = -velocityY;
 			}
 
 			else if (positionY > vy - mb_threshold)
 			{
 				positionY = vy - mb_threshold;
-				velocity.y() = -velocity.y();
+				velocityY = -velocityY;
 			}
 		}
 
-		void AdjustPosition (int &positionX, int &positionY, vec2 &velocity)
+		void AdjustPosition (int &positionX, int &positionY, int &positionZ, float &velocityX, float &velocityY, float &velocityZ)
 		{
-			positionX += (int)velocity.x();
-			positionY += (int)velocity.y();
+			positionX += (int)velocityX;
+			positionY += (int)velocityY;
+			positionZ += (int)velocityZ;
 
-			CheckBoundries (positionX, positionY, velocity);
+			CheckBoundries (positionX, positionY, positionZ, velocityX, velocityY, velocityZ);
 		}
 	};
 }

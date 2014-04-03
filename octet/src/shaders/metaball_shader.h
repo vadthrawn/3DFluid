@@ -28,7 +28,7 @@ namespace octet
 
 						uniform vec3 emissive_color[maxNumOfMetaballs];
 						uniform int numOfMetaballs;
-						uniform int positions[2 * maxNumOfMetaballs];
+						uniform int positions[3 * maxNumOfMetaballs];
 						uniform int threshold;
 
 						void main()
@@ -38,17 +38,21 @@ namespace octet
 
 							for (int i = 0; i < numOfMetaballs; i++)
 							{
-								float magnitude = sqrt (pow (gl_FragCoord.x - positions[i * 2], 2.0) + pow (gl_FragCoord.y - positions[i * 2 + 1], 2.0));
+								float magnitude = sqrt (pow (gl_FragCoord.x - positions[i * 3], 2.0) + pow (gl_FragCoord.y - positions[i * 3 + 1], 2.0) + pow (gl_FragCoord.z - positions[i * 3 + 2], 2.0));
 								float currentBallPotential = threshold / magnitude;
 
 								potential += currentBallPotential;
-								currentColor = mix (currentColor, emissive_color[i], currentBallPotential);
+
+								if (i > 0)
+									currentColor = mix (currentColor, emissive_color[i], currentBallPotential);
+								else
+									currentColor = emissive_color[i];
 							}
-							
-							gl_FragColor = vec4(0, 0, 0, 1);
 
 							if (potential > 1.0)
 								gl_FragColor = vec4 (currentColor, 1);
+							else
+								discard;
 						}
 					);
     
@@ -69,7 +73,7 @@ namespace octet
 				glUniform1i (numOfMetaballs_, numOfMetaballs);
 				glUniformMatrix4fv (modelToProjection_, 1, GL_FALSE, modelToProjection.get());
 				glUniform3fv (emissive_color_, numOfMetaballs, emissive_color);
-				glUniform1iv (position_, numOfMetaballs * 2, position);
+				glUniform1iv (position_, numOfMetaballs * 3, position);
 				glUniform1i (threshold_, threshold);
 			}
 		};
