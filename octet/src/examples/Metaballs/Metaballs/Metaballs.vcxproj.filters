@@ -18,6 +18,12 @@
     <ClInclude Include="..\Metaballs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\particles_app2Dworking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SPH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">

@@ -9,8 +9,11 @@
 
 #include <time.h>
 #include <math.h>
+#include <vector>
 #include "../../octet.h"
-#include "Metaballs.h"
+//#include "Metaballs.h"
+//#include "particles_app2Dworking.h"
+#include "SPH.h"
 
 /// Create a box with octet
 int main(int argc, char **argv) {
@@ -21,7 +24,7 @@ int main(int argc, char **argv) {
   octet::app::init_all(argc, argv);
 
   // our application.
-  octet::Metaballs app(argc, argv);
+  octet::SPH_Fluid_System app(argc, argv);
   app.init();
 
   // open windows
