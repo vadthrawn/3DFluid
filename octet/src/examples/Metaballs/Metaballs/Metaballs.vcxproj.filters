@@ -24,6 +24,9 @@
     <ClInclude Include="..\SPH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\particles_app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">

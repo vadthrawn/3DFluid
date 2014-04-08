@@ -4,7 +4,7 @@ namespace octet
 	{
 		class metaball_shader : public shader
 		{
-			GLuint modelToProjection_, emissive_color_, position_, threshold_, numOfMetaballs_;
+			GLuint modelToProjection_, position_, threshold_, numOfMetaballs_;
 
 		public:
 			void init ()
@@ -24,17 +24,16 @@ namespace octet
 					);
 
 					const char fragment_shader[] = SHADER_STR(
-						const int maxNumOfMetaballs = 100;
+						const int maxNumOfMetaballs = 200;
 
-						uniform vec3 emissive_color[maxNumOfMetaballs];
 						uniform int numOfMetaballs;
 						uniform float positions[2 * maxNumOfMetaballs];
-						uniform int threshold;
+						uniform float threshold;
 
 						void main()
 						{
 							float potential = 0.0;
-							vec3 currentColor = vec3 (1, 0, 0);
+							vec3 currentColor = vec3 (0, 0.2, 0.5);
 
 							for (int i = 0; i < numOfMetaballs; i++)
 							{
@@ -42,11 +41,6 @@ namespace octet
 								float currentBallPotential = threshold / magnitude;
 
 								potential += currentBallPotential;
-
-								if (i > 0)
-									currentColor = mix (currentColor, emissive_color[i], currentBallPotential);
-								else
-									currentColor = emissive_color[i];
 							}
 
 							if (potential > 1.0)
@@ -60,21 +54,19 @@ namespace octet
 				#endif
 				
 				modelToProjection_ = glGetUniformLocation (program(), "modelToProjection");
-				emissive_color_ = glGetUniformLocation (program(), "emissive_color");
 				position_ = glGetUniformLocation (program(), "positions");
 				threshold_ = glGetUniformLocation (program(), "threshold");
 				numOfMetaballs_ = glGetUniformLocation (program(), "numOfMetaballs");
 			}
 
-			void render (const mat4t &modelToProjection, const float* emissive_color, const float* position, const int &threshold, const int &numOfMetaballs)
+			void render (const mat4t &modelToProjection, const float* position, const float &threshold, const int &numOfMetaballs)
 			{
 				shader::render();
 
 				glUniform1i (numOfMetaballs_, numOfMetaballs);
 				glUniformMatrix4fv (modelToProjection_, 1, GL_FALSE, modelToProjection.get());
-				glUniform3fv (emissive_color_, numOfMetaballs, emissive_color);
 				glUniform1fv (position_, numOfMetaballs * 2, position);
-				glUniform1i (threshold_, threshold);
+				glUniform1f (threshold_, threshold);
 			}
 		};
 	}

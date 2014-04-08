@@ -1,9 +1,13 @@
 ﻿  main.cpp
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(126): warning C4244: '=' : conversion from 'double' to 'int', possible loss of data
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(215): warning C4018: '<' : signed/unsigned mismatch
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(223): warning C4018: '<' : signed/unsigned mismatch
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(268): warning C4018: '<' : signed/unsigned mismatch
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(282): warning C4018: '<' : signed/unsigned mismatch
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(320): warning C4018: '<' : signed/unsigned mismatch
-c:\users\cory\desktop\octet\src\examples\metaballs\sph.h(323): warning C4018: '<' : signed/unsigned mismatch
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(52): warning C4305: '=' : truncation from 'double' to 'float'
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(53): warning C4305: '=' : truncation from 'double' to 'float'
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(57): warning C4305: '=' : truncation from 'double' to 'float'
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(223): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(226): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(228): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(239): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(240): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(241): warning C4244: '+=' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(296): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
+c:\users\cory\desktop\octet\src\examples\metaballs\particles_app.h(297): warning C4244: 'initializing' : conversion from 'double' to 'float', possible loss of data
   Metaballs.vcxproj -> C:\Users\Cory\Desktop\octet\src\examples\Metaballs\Debug\Metaballs.exe
