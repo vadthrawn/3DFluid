@@ -40,7 +40,10 @@ namespace octet
 								float magnitude = sqrt (pow (gl_FragCoord.x - positions[i * 2], 2.0) + pow (gl_FragCoord.y - positions[i * 2 + 1], 2.0));// + pow (gl_FragCoord.z - positions[i * 3 + 2], 2.0));
 								float currentBallPotential = threshold / magnitude;
 
-								potential += currentBallPotential;
+								//potential += currentBallPotential;
+
+								if (currentBallPotential > potential)
+									potential = currentBallPotential;
 							}
 
 							if (potential > 1.0)

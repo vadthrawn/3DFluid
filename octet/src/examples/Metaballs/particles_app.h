@@ -405,7 +405,7 @@ void check_state(sim_state_t* s)
 
 	  //float color[] = {0, 0, 1, 1};
       //color_shader_.render(modelToProjection, color);
-	  shader.render (modelToProjection, mb_positions, 2.0f, state->n);
+	  shader.render (modelToProjection, mb_positions, 20.0f, state->n);
 
       compute_accel(state, &params);
       leapfrog_step(state, params.dt);
