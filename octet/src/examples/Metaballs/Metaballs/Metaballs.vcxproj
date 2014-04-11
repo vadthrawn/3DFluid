@@ -77,9 +77,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\3D_Particle_App.h" />
     <ClInclude Include="..\Metaballs.h" />
     <ClInclude Include="..\particles_app.h" />
     <ClInclude Include="..\particles_app2Dworking.h" />
+    <ClInclude Include="..\particles_app3.h" />
     <ClInclude Include="..\SPH.h" />
   </ItemGroup>
   <ItemGroup>

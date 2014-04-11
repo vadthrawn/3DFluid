@@ -33,21 +33,22 @@ namespace octet
 						void main()
 						{
 							float potential = 0.0;
-							vec3 currentColor = vec3 (0, 0.2, 0.5);
+							float rollingAverage = 0.0;
+							vec3 blueColor = vec3 (0, 0.2, 0.5);
+							vec3 whiteColor = vec3 (1, 1, 1);
 
 							for (int i = 0; i < numOfMetaballs; i++)
 							{
 								float magnitude = sqrt (pow (gl_FragCoord.x - positions[i * 2], 2.0) + pow (gl_FragCoord.y - positions[i * 2 + 1], 2.0));// + pow (gl_FragCoord.z - positions[i * 3 + 2], 2.0));
 								float currentBallPotential = threshold / magnitude;
 
-								//potential += currentBallPotential;
-
-								if (currentBallPotential > potential)
-									potential = currentBallPotential;
+								potential += currentBallPotential;
 							}
 
+							rollingAverage = (potential / numOfMetaballs) * 0.5;
+
 							if (potential > 1.0)
-								gl_FragColor = vec4 (currentColor, 1);
+								gl_FragColor = vec4 (mix (blueColor, whiteColor, rollingAverage), 1);
 							else
 								discard;
 						}

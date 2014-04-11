@@ -27,6 +27,12 @@
     <ClInclude Include="..\particles_app.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\particles_app3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3D_Particle_App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\main.cpp">

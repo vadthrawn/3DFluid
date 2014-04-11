@@ -32,6 +32,6 @@
   #include "../shaders/phong_shader.h"
   #include "../shaders/bump_shader.h"
   #include "../shaders/metaball_shader.h"
-  //#include "../shaders/param_shader.h"
+  #include "../shaders/fairyball_shader.h"
 
 #endif
